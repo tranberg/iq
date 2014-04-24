@@ -1,0 +1,4 @@
+population size, mean iq. First line is reserved for master population.
+10000,105
+300,100
+80,95

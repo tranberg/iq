@@ -63,8 +63,8 @@ if show == 1:
     for i in range(nd):
         plt.plot(xx,y[:,i],'b')
     plt.plot(xx,y[:,-1],'r')
-    plt.xlabel('IQ')
-    plt.ylabel('Number of people. Not normalised.')
+    plt.xlabel('IQ, bin size: '+str(dx))
+    plt.ylabel('Number of people')
     plt.title('People vs. IQ distributions')
     plt.show()
 
@@ -75,5 +75,5 @@ for j in range(nd+1):
 printer('Standard deviations: '+str(sdds))
 printer('Increase in standard deviation from master population to compound:')
 sdinc = (sdds[-1]-sdds[0])/sdds[0]*100
-printer(str(round(sdinc,2))+'%')
+printer(str(round(sdinc,4))+'%')
 

@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 from scipy.stats import norm
 
 """
-Some clever comments.
+Script that uses population sizes and mean IQs to build a compound population
+and calculate the effect on the standard deviation.
 """
 
 # Set to 1 if you want to see plots.
@@ -55,7 +56,7 @@ for i in range(nd+1):
 # Plotting of distributions.
 # Remember to add a legend at some point.
 if show == 1:
-    xx = (x[:-1]*sd)+mid[0]#+mid[0]
+    xx = (x[:-1]*sd)+mid[0]
     plt.figure()
     for i in range(nd):
         plt.plot(xx,y[:,i],'b')

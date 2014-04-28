@@ -36,7 +36,7 @@ def plotter(figtype,x,y):
     # Plotting of distributions.
     # Remember to add a legend at some point.
     xx = (x[:-1]*sd)+mid[0]
-    y *= normfactor 
+    y /= normfactor 
     plt.figure()
     if figtype == 'all':
         plt.plot(xx,y[:,0],'b')
@@ -83,7 +83,7 @@ print('Loaded '+str(len(data))+' distributions')
 nd = len(data)  # number of distributions
 dx = 0.0001     # step size, smaller is better
 sd = 15         # we assume all distributions have standard deviation of 15
-sdrange = 5     # range of standard deviations to include
+sdrange = 8     # number of standard deviations to be include in both directions
 
 mid = data[:,1]     # the mean IQs of the populations. 
 pop = data[:,0]     # population sizes
@@ -93,9 +93,9 @@ printer('mean IQs: '+str(mid))
 x = np.arange(-sdrange,sdrange+dx,dx)   # x axis is IQ
 intmids = x[:-1]+.5*dx                  # midpoints of all intervals
 
-normfactor = (1/dx)/(sd*sdrange*2)      # factor for normalising y axis
+normfactor = (sd*sdrange*2.)/len(x)     # factor for normalising y axis
 
-# Build all distributions and combine them
+# Build all distributions, combine and plot them
 if 'all' in modes:
     y = np.zeros((len(x)-1,nd+1)) # y axis is number of people.
     for i in range(nd+1):
@@ -104,17 +104,7 @@ if 'all' in modes:
             y[:,i] = (norm.cdf(x[:-1]+dx+d)-norm.cdf(x[:-1]+d))*pop[i]
         else:
             y[:,i] = np.sum(y,1)
-
     plotter(figtype,x,y)
-
-    # Calculate sd in compound distribution and compare to the master
-    sdds = []
-    for j in range(nd+1):
-        sdds.append(stdd(intmids,y[:,j]))
-    printer('Standard deviations: '+str(sdds))
-    print('Increase in standard deviation from dominant population to compound:')
-    sdinc = (sdds[-1]-sdds[0])/sdds[0]*100
-    print(str(round(sdinc,4))+'%')
 
 elif 'summed' in modes:
     y = np.zeros((len(x)-1,nd+2)) # y axis is number of people.
@@ -128,11 +118,25 @@ elif 'summed' in modes:
             y[:,i] = np.sum(y[:,1:-2],1)
     plotter(figtype,x,y)
 
-    # Calculate sd in compound distribution and compare to the master
-    sdds = []
+# Calculate sd in compound distribution and compare to the dominant
+sdds = []
+if 'all' in modes:
     for j in range(nd+1):
         sdds.append(stdd(intmids,y[:,j]))
     printer('Standard deviations: '+str(sdds))
     print('Increase in standard deviation from dominant population to compound:')
     sdinc = (sdds[-1]-sdds[0])/sdds[0]*100
+    print(str(round(sdinc,4))+'%')
+elif 'summed' in modes:
+    for j in range(nd+2):
+        sdds.append(stdd(intmids,y[:,j]))
+    printer('Standard deviations')
+    printer('Dominant: '+str(sdds[0]))
+    printer('Sum of immigrants: '+str(sdds[-1]))
+    printer('Compound: '+str(sdds[-2]))
+    print('SD ratio between dominant and sum of immigrants')
+    sdr = (sdds[-1]-sdds[0])/sdds[0]*100
+    print(str(round(sdr,4))+'%')
+    print('Increase in standard deviation from dominant population to compound:')
+    sdinc = (sdds[-2]-sdds[0])/sdds[0]*100
     print(str(round(sdinc,4))+'%')

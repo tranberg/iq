@@ -8,6 +8,6 @@ Read inside distribution.py how to use it.
 
 Files
 -----
-- data.txt: sample data
-- dk.txt:   sample data from Denmark
+- data.txt: test sample
+- dk.txt:   data from Denmark
 - distribution.py: main script
